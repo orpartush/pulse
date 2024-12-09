@@ -8,7 +8,6 @@ const projects = ref<Tables<'projects'>[] | null>(null)
 const getProjects = async () => {
   const { data, error } = await supabase.from('projects').select()
   if (error) console.log('error:', error)
-  console.log('projects:', data)
   projects.value = data
 }
 ;(async () => await getProjects())()
@@ -19,7 +18,7 @@ const getProjects = async () => {
   <RouterLink to="/"> Go to home </RouterLink>
   <ul>
     <li v-for="project in projects" :key="project.id">
-      {{ project. }}
+      {{ project.name }}
     </li>
   </ul>
 </template>
