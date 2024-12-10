@@ -1,7 +1,4 @@
 <script setup lang="ts"></script>
-
 <template>
-  <div>Home Page</div>
+  <h1>Task</h1>
 </template>
-
-<style lang=""></style>
