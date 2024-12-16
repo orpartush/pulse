@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
+import { register } from '@/utils/supaAuth'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const formData = ref({
   username: '',
@@ -14,6 +16,13 @@ const formData = ref({
   password: '',
   confirmPassword: '',
 })
+
+const router = useRouter()
+
+const signup = async () => {
+  const isRegistered = await register(formData.value)
+  if (isRegistered) router.push('/')
+}
 </script>
 
 <template>
@@ -30,7 +39,7 @@ const formData = ref({
           <Button variant="outline" class="w-full"> Register with Google </Button>
           <Separator label="Or" />
         </div>
-        <form class="grid gap-4">
+        <form class="grid gap-4" @submit.prevent="signup">
           <div class="grid gap-2">
             <Label id="username" class="text-left">Username</Label>
             <Input

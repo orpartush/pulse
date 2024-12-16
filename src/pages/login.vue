@@ -4,6 +4,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
+import { login } from '@/utils/supaAuth'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const formData = ref({
+  email: '',
+  password: '',
+})
+
+const router = useRouter()
+
+const signin = async () => {
+  const isLoggedIn = await login(formData.value)
+  if (isLoggedIn) router.push('/')
+}
 </script>
 
 <template>
@@ -19,17 +34,28 @@ import { Separator } from '@/components/ui/separator'
           <Separator label="Or" />
         </div>
 
-        <form class="grid gap-4">
+        <form class="grid gap-4" @submit.prevent="signin">
           <div class="grid gap-2">
             <Label id="email" class="text-left">Email</Label>
-            <Input type="email" placeholder="johndoe19@example.com" required />
+            <Input
+              type="email"
+              placeholder="johndoe19@example.com"
+              required
+              v-model="formData.email"
+            />
           </div>
           <div class="grid gap-2">
             <div class="flex items-center">
               <Label id="password">Password</Label>
               <a href="#" class="inline-block ml-auto text-xs underline"> Forgot your password? </a>
             </div>
-            <Input id="password" type="password" autocomplete required />
+            <Input
+              id="password"
+              type="password"
+              autocomplete
+              required
+              v-model="formData.password"
+            />
           </div>
           <Button type="submit" class="w-full"> Login </Button>
         </form>
