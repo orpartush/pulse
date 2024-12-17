@@ -3,7 +3,8 @@ import { storeToRefs } from 'pinia'
 import AppErrorPage from './components/AppError/AppErrorPage.vue'
 import AuthLayout from './components/Layout/main/AuthLayout.vue'
 import { useErrorStore } from './stores/error'
-import { onErrorCaptured } from 'vue'
+import { onErrorCaptured, onMounted } from 'vue'
+import { supabase } from './lib/supabaseClient'
 import { useAuthStore } from './stores/auth'
 
 const { activeError } = storeToRefs(useErrorStore())
@@ -11,6 +12,10 @@ const errorStore = useErrorStore()
 
 onErrorCaptured((error) => {
   errorStore.setError({ error })
+})
+
+onMounted(() => {
+  useAuthStore().trackAuthChanges()
 })
 </script>
 

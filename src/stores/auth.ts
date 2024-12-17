@@ -8,6 +8,7 @@ import { ref } from 'vue'
 export const useAuthStore = defineStore('auth-store', () => {
   const user = ref<null | User>(null)
   const profile = ref<null | Tables<'profiles'>>(null)
+  const isTrackingAuthChanges = ref(false)
 
   const setProfile = async () => {
     if (!user.value) {
@@ -37,7 +38,17 @@ export const useAuthStore = defineStore('auth-store', () => {
     if (data.session?.user) await setAuth(data.session)
   }
 
-  return { user, profile, setAuth, getSession }
+  const trackAuthChanges = () => {
+    if (isTrackingAuthChanges.value) return
+    isTrackingAuthChanges.value = true
+    supabase.auth.onAuthStateChange((event, session) => {
+      setTimeout(async () => {
+        await useAuthStore().setAuth(session)
+      }, 0)
+    })
+  }
+
+  return { user, profile, setAuth, getSession, trackAuthChanges }
 })
 
 // Getting HMR from Vite:
