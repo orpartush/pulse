@@ -11,6 +11,6 @@ export const validateEmail = (email: string) => {
 export const validatePassword = (password: string) => {
   if (!password) return []
   const errors = []
-  if (password.length <= 6) errors.push('Short password')
+  if (password.length <= 5) errors.push('Short password')
   return errors
 }
