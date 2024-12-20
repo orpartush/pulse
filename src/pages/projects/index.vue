@@ -4,6 +4,7 @@ import { usePageStore } from '@/stores/page'
 import { columns } from '@/utils/projectsColumns'
 import { useProjectsStore } from '@/stores/loaders/projects'
 import { storeToRefs } from 'pinia'
+import { useCollabs } from '@/composables/collabs'
 
 usePageStore().pageData.title = 'Projects'
 
@@ -11,6 +12,11 @@ const projectsLoader = useProjectsStore()
 const { projects } = storeToRefs(projectsLoader)
 const { getProjects } = projectsLoader
 await getProjects()
+
+const { getGroupedCollabs, groupedCollabs } = useCollabs()
+console.log('🚀 ~ groupedCollabes:', groupedCollabs.value)
+
+await getGroupedCollabs(projects.value)
 </script>
 
 <template>
