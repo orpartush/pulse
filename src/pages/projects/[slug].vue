@@ -14,6 +14,7 @@ import { storeToRefs } from 'pinia'
 import AppInPlaceEditText from '@/components/AppInPlaceEdit/AppInPlaceEditText.vue'
 import AppInPlaceEditStatus from '@/components/AppInPlaceEdit/AppInPlaceEditStatus.vue'
 import { useCollabs } from '@/composables/collabs'
+import AppInPlaceEditTextarea from '@/components/AppInPlaceEdit/AppInPlaceEditTextarea.vue'
 
 const { slug } = useRoute('/projects/[slug]').params
 
@@ -48,7 +49,7 @@ const collabs = project.value?.collaborators
     <TableRow>
       <TableHead> Description </TableHead>
       <TableCell>
-        <AppInPlaceEditText v-model="project.description" @commit="updateProject" />
+        <AppInPlaceEditTextarea v-model="project.description" @commit="updateProject" />
       </TableCell>
     </TableRow>
     <TableRow>
