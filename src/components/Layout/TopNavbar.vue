@@ -9,6 +9,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from '@/stores/auth'
+import { RouterLink } from 'vue-router'
+
+const { profile } = storeToRefs(useAuthStore())
 </script>
 
 <template>
@@ -20,20 +25,31 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
       ></iconify-icon>
       <Input class="w-full pl-8 bg-background" type="text" placeholder="Search ..." />
     </form>
-    <DropdownMenu>
+    <DropdownMenu v-if="profile">
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src="https://github.com/radix-vue.png" alt="@radix-vue" />
+          <AvatarImage
+            :src="profile.avatar_url || ''"
+            :alt="`${profile.full_name} profile picture`"
+          />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Team</DropdownMenuItem>
-        <DropdownMenuItem>Subscription</DropdownMenuItem>
+
+        <DropdownMenuItem>
+          <RouterLink
+            :to="{
+              name: '/users/[username]',
+              params: { username: profile.username },
+            }"
+            class="w-full h-full"
+          >
+            Profile
+          </RouterLink>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   </nav>
