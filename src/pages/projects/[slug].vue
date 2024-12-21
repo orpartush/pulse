@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { projectQuery, type Project } from '@/utils/supaQueries'
 import { usePageStore } from '@/stores/page'
 import Table from '@/components/ui/table/Table.vue'
 import TableRow from '@/components/ui/table/TableRow.vue'
@@ -10,11 +9,16 @@ import TableCell from '@/components/ui/table/TableCell.vue'
 import Avatar from '@/components/ui/avatar/Avatar.vue'
 import AvatarImage from '@/components/ui/avatar/AvatarImage.vue'
 import AvatarFallback from '@/components/ui/avatar/AvatarFallback.vue'
-import { useErrorStore } from '@/stores/error'
+import { useProjectsStore } from '@/stores/loaders/projects'
+import { storeToRefs } from 'pinia'
+import AppInPlaceEditText from '@/components/AppInPlaceEdit/AppInPlaceEditText.vue'
+import AppInPlaceEditStatus from '@/components/AppInPlaceEdit/AppInPlaceEditStatus.vue'
 
-const route = useRoute('/projects/[slug]')
+const { slug } = useRoute('/projects/[slug]').params
 
-const project = ref<Project | null>(null)
+const projectLoader = useProjectsStore()
+const { project } = storeToRefs(projectLoader)
+const { getProject, updateProject } = projectLoader
 
 watch(
   () => project.value?.name,
@@ -23,31 +27,28 @@ watch(
   },
 )
 
-const getProjects = async () => {
-  const { data, error, status } = await projectQuery(route.params.slug)
-  if (error) useErrorStore().setError({ error, customCode: status })
-
-  project.value = data
-}
-
-await getProjects()
+await getProject(slug)
 </script>
 
 <template>
   <Table v-if="project">
     <TableRow>
       <TableHead> Name </TableHead>
-      <TableCell> {{ project.name }} </TableCell>
+      <TableCell>
+        <AppInPlaceEditText v-model="project.name" @commit="updateProject" />
+      </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Description </TableHead>
       <TableCell>
-        {{ project.description }}
+        <AppInPlaceEditText v-model="project.description" @commit="updateProject" />
       </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Status </TableHead>
-      <TableCell>{{ project.status }}</TableCell>
+      <TableCell
+        ><AppInPlaceEditStatus v-model="project.status" @commit="updateProject"
+      /></TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Collaborators </TableHead>
