@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import AppErrorPage from './components/AppError/AppErrorPage.vue'
-import AuthLayout from './components/Layout/main/AuthLayout.vue'
 import { useErrorStore } from './stores/error'
-import { onErrorCaptured, onMounted } from 'vue'
-import { supabase } from './lib/supabaseClient'
+import { defineAsyncComponent, onErrorCaptured, onMounted } from 'vue'
 import { useAuthStore } from './stores/auth'
 
 const { activeError } = storeToRefs(useErrorStore())
@@ -17,10 +15,14 @@ onErrorCaptured((error) => {
 onMounted(() => {
   useAuthStore().trackAuthChanges()
 })
+
+const { user } = storeToRefs(useAuthStore())
+const AuthLayout = defineAsyncComponent(() => import('./components/Layout/main/AuthLayout.vue'))
+const GuestLayout = defineAsyncComponent(() => import('./components/Layout/main/GuestLayout.vue'))
 </script>
 
 <template>
-  <AuthLayout>
+  <Component :is="user ? AuthLayout : GuestLayout">
     <AppErrorPage v-if="activeError" />
     <RouterView v-else v-slot="{ Component, route }">
       <Suspense v-if="Component" :timeout="0">
@@ -28,5 +30,5 @@ onMounted(() => {
         <template #fallback> <span>Loading...</span> </template>
       </Suspense>
     </RouterView>
-  </AuthLayout>
+  </Component>
 </template>
