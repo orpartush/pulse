@@ -4,6 +4,7 @@ import AppErrorPage from './components/AppError/AppErrorPage.vue'
 import { useErrorStore } from './stores/error'
 import { defineAsyncComponent, onErrorCaptured, onMounted } from 'vue'
 import { useAuthStore } from './stores/auth'
+import { useMeta } from 'vue-meta'
 
 const { activeError } = storeToRefs(useErrorStore())
 const errorStore = useErrorStore()
@@ -19,6 +20,10 @@ onMounted(() => {
 const { user } = storeToRefs(useAuthStore())
 const AuthLayout = defineAsyncComponent(() => import('./components/Layout/main/AuthLayout.vue'))
 const GuestLayout = defineAsyncComponent(() => import('./components/Layout/main/GuestLayout.vue'))
+
+useMeta({
+  title: 'Pulse',
+})
 </script>
 
 <template>
