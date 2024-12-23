@@ -10,8 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useWindowSize } from '@vueuse/core'
 import { watchEffect } from 'vue'
-import { inject } from 'vue'
-import { menuKey, type MenuInjectionOptions } from '@/utils/injectionKeys'
+import { useMenu } from '@/composables/menu'
 
 const links = [
   {
@@ -60,7 +59,7 @@ const executeAction = async (linkTitle: string) => {
 
 defineEmits(['taskClicked'])
 
-const { menuOpen, toggleMenu } = inject(menuKey) as MenuInjectionOptions
+const { menuOpen, toggleMenu } = useMenu()
 const windowWidth = useWindowSize().width
 
 watchEffect(() => {
